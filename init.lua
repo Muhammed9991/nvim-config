@@ -222,6 +222,20 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+-- Terminal mode keymaps
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = 'Move to left split from terminal' })
+vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move to lower split from terminal' })
+vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move to upper split from terminal' })
+vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move to right split from terminal' })
+
+-- Normal mode split navigation
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left split' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower split' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper split' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right split' })
+vim.keymap.set('n', '<leader>ts', ':split | terminal<CR>', { desc = 'Open terminal split below' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
