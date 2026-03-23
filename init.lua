@@ -236,6 +236,9 @@ vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper split' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right split' })
 vim.keymap.set('n', '<leader>ts', ':split | terminal<CR>', { desc = 'Open terminal split below' })
 
+-- Diagnostic Popup
+vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostic' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
