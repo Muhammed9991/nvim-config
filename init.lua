@@ -626,7 +626,17 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-        pyright = {},
+
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              analysis = {
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
+        ruff = {},
         marksman = {},
         -- rust_analyzer = {},
         --
