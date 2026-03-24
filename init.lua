@@ -242,6 +242,21 @@ vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagn
 -- Quickly open init.lua
 vim.keymap.set('n', '<leader>vc', ':edit ' .. vim.fn.stdpath 'config' .. '/init.lua<CR>', { desc = 'Open [V]im [C]onfig' })
 
+-- Open global todo.md in a vertical split
+vim.keymap.set('n', '<leader>td', ':vsplit ~/todo.md<CR>', { desc = 'Open global [T]o[D]o list' })
+
+-- Toggle Markdown checkboxes in normal mode
+vim.keymap.set('n', '<leader>x', function()
+  local line = vim.api.nvim_get_current_line()
+  if line:match '%-%s*%[%s*%]' then
+    local new_line = line:gsub('%-%s*%[%s*%]', '- [x]')
+    vim.api.nvim_set_current_line(new_line)
+  elseif line:match '%-%s*%[x%]' then
+    local new_line = line:gsub('%-%s*%[x%]', '- [ ]')
+    vim.api.nvim_set_current_line(new_line)
+  end
+end, { desc = 'Toggle Checkbo[x]' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -954,6 +969,7 @@ require('lazy').setup({
   require 'kickstart.plugins.conform',
   require 'kickstart.plugins.catppuccin',
   require 'kickstart.plugins.venv-selector',
+  require 'kickstart.plugins.bullets',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
