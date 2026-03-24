@@ -239,6 +239,9 @@ vim.keymap.set('n', '<leader>ts', ':split | terminal<CR>', { desc = 'Open termin
 -- Diagnostic Popup
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostic' })
 
+-- Quickly open init.lua
+vim.keymap.set('n', '<leader>vc', ':edit ' .. vim.fn.stdpath 'config' .. '/init.lua<CR>', { desc = 'Open [V]im [C]onfig' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
