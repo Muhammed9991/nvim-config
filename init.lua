@@ -473,7 +473,15 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           -- This is where a variable was first declared, or where a function is defined, etc.
           -- To jump back, press <C-t>.
-          vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
+          -- Jump to the implementation of the word under your cursor.
+          vim.keymap.set('n', 'gri', builtin.lsp_implementations, { buffer = buf, desc = '[G]oto [I]mplementation' })
+
+          -- Jump to the definition of the word under your cursor.
+          -- (Changed from grd to gd)
+          vim.keymap.set('n', 'gd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
+
+          -- Fuzzy find all the symbols in your current document.
+          vim.keymap.set('n', 'gO', builtin.lsp_document_symbols, { buffer = buf, desc = 'Open Document Symbols' })
 
           -- Fuzzy find all the symbols in your current document.
           -- Symbols are things like variables, functions, types, etc.
@@ -641,12 +649,21 @@ require('lazy').setup({
       local servers = {
         clangd = {},
         -- gopls = {},
-
         basedpyright = {
+          -- Dynamically fetch the venv path set by venv-selector
+          on_new_config = function(new_config, _)
+            if vim.env.VIRTUAL_ENV then
+              new_config.settings.python = new_config.settings.python or {}
+              new_config.settings.python.pythonPath = vim.env.VIRTUAL_ENV .. '/bin/python'
+            end
+          end,
           settings = {
             basedpyright = {
               analysis = {
+                autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
+                diagnosticMode = 'openFilesOnly',
+                typeCheckingMode = 'basic',
               },
             },
           },
