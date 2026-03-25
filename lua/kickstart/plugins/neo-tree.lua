@@ -20,6 +20,8 @@ return {
       position = 'right',
     },
     filesystem = {
+      -- ADDED: Fixes Harpoon 2 crashing when launching Neovim with `nvim .`
+      hijack_netrw_behavior = 'open_current',
       filtered_items = {
         visible = true,
         hide_dotfiles = false,
