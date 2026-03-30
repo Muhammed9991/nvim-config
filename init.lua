@@ -234,7 +234,12 @@ vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left split' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower split' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper split' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right split' })
+
+-- Open terminal in a horizontal split below (Login Shell)
 vim.keymap.set('n', '<leader>ts', ':split | terminal zsh -l<CR>', { desc = 'Open terminal split below' })
+
+-- Open terminal in a vertical split (Login Shell)
+vim.keymap.set('n', '<leader>tv', ':vsplit | terminal zsh -l<CR>', { desc = 'Open [T]erminal in [V]ertical split' })
 
 -- Diagnostic Popup
 vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Show diagnostic' })
