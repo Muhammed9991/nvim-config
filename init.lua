@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -259,6 +259,21 @@ end, { desc = 'Toggle Checkbo[x]' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- Show relative line numbers only in normal mode
+local rel_num_group = vim.api.nvim_create_augroup('kickstart-relative-numbers', { clear = true })
+
+-- Turn off relative numbers when entering Insert mode
+vim.api.nvim_create_autocmd('InsertEnter', {
+  group = rel_num_group,
+  callback = function() vim.opt.relativenumber = false end,
+})
+
+-- Turn relative numbers back on when leaving Insert mode
+vim.api.nvim_create_autocmd('InsertLeave', {
+  group = rel_num_group,
+  callback = function() vim.opt.relativenumber = true end,
+})
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
