@@ -949,6 +949,20 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function() return '%2l:%-2v' end
 
+      -- Override the filename section to clearly show [UNSAVED]
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_filename = function()
+        -- Get the relative path (e.g., 'include/http.h')
+        local filename = vim.fn.expand '%:~:.'
+        if filename == '' then filename = '[No Name]' end
+
+        -- Check if the file has unsaved changes or is read-only
+        local unsaved = vim.bo.modified and ' [UNSAVED]' or ''
+        local readonly = vim.bo.readonly and ' [RO]' or ''
+
+        return filename .. readonly .. unsaved
+      end
+
       -- ... and there is more!
       --  Check out: https://github.com/nvim-mini/mini.nvim
     end,
