@@ -147,8 +147,8 @@ vim.o.splitbelow = true
 --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
 --   See `:help lua-options`
 --   and `:help lua-guide-options`
-vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.o.list = false
+vim.opt.listchars = { trail = '·', nbsp = '␣' }
 vim.opt.wildmode = 'longest:full,full'
 
 -- Preview substitutions live, as you type!
@@ -264,6 +264,20 @@ end, { desc = 'Toggle Checkbo[x]' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
+
+-- LaTeX settings (Ensures window-local settings like colorcolumn apply)
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  group = vim.api.nvim_create_augroup('kickstart-latex-settings', { clear = true }),
+  pattern = '*.tex',
+  callback = function()
+    -- Set line width to 80 characters
+    vim.opt_local.textwidth = 80
+    -- Add 't' to formatoptions (auto-wraps text using textwidth)
+    vim.opt_local.formatoptions:append 't'
+    -- Force the window to draw the colorcolumn
+    vim.opt_local.colorcolumn = '80'
+  end,
+})
 
 -- Show relative line numbers only in normal mode
 local rel_num_group = vim.api.nvim_create_augroup('kickstart-relative-numbers', { clear = true })
@@ -668,6 +682,7 @@ require('lazy').setup({
       ---@type table<string, vim.lsp.Config>
       local servers = {
         clangd = {},
+        texlab = {},
         -- gopls = {},
         basedpyright = {
           -- Dynamically fetch the venv path set by venv-selector
@@ -771,7 +786,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, tex = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -782,6 +797,7 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+        tex = { 'latexindent' },
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
@@ -1022,6 +1038,7 @@ require('lazy').setup({
   require 'kickstart.plugins.venv-selector',
   require 'kickstart.plugins.bullets',
   require 'kickstart.plugins.harpoon',
+  require 'kickstart.plugins.vimtex',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
