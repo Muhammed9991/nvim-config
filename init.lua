@@ -696,7 +696,6 @@ require('lazy').setup({
       --  See `:help lsp-config` for information about keys and how to configure
       ---@type table<string, vim.lsp.Config>
       local servers = {
-        clangd = {},
         texlab = {},
         -- gopls = {},
         basedpyright = {
@@ -760,6 +759,9 @@ require('lazy').setup({
         },
       }
 
+      -- Only let Mason handle clangd if we are on macOS
+      if vim.fn.has 'mac' == 1 then servers.clangd = {} end
+
       -- Ensure the servers and tools above are installed
       --
       -- To check the current status of installed tools and/or manually install
@@ -777,6 +779,12 @@ require('lazy').setup({
       for name, server in pairs(servers) do
         vim.lsp.config(name, server)
         vim.lsp.enable(name)
+      end
+
+      -- If we are NOT on macOS (e.g., your Linux VM), use the system clangd
+      if vim.fn.has 'mac' == 0 then
+        vim.lsp.config('clangd', {})
+        vim.lsp.enable 'clangd'
       end
     end,
   },
