@@ -129,7 +129,6 @@ vim.schedule(function()
     }
   end
 end)
-im.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
 -- Enable break indent
 vim.o.breakindent = true
