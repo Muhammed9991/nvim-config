@@ -293,6 +293,16 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
   end,
 })
 
+-- C and C++ settings
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  group = vim.api.nvim_create_augroup('kickstart-c-settings', { clear = true }),
+  pattern = { '*.c', '*.cpp', '*.h' },
+  callback = function()
+    -- Show a single vertical highlight column at 80 characters
+    vim.opt_local.colorcolumn = '80'
+  end,
+})
+
 -- Show relative line numbers only in normal mode
 local rel_num_group = vim.api.nvim_create_augroup('kickstart-relative-numbers', { clear = true })
 
