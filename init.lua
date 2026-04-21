@@ -1072,6 +1072,7 @@ require('lazy').setup({
   require 'kickstart.plugins.bullets',
   require 'kickstart.plugins.harpoon',
   require 'kickstart.plugins.vimtex',
+  require 'kickstart.plugins.rust',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1102,6 +1103,9 @@ require('lazy').setup({
       task = '📌',
       lazy = '💤 ',
     },
+  },
+  rocks = {
+    hererocks = false,
   },
 })
 
