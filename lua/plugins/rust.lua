@@ -6,20 +6,21 @@ return {
     vim.g.rustaceanvim = {
       server = {
         on_attach = function(client, bufnr)
-          vim.keymap.set('n', '<leader>ca', function() vim.cmd.RustLsp 'codeAction' end, { desc = 'Rust Code Action', buffer = bufnr })
+          local map = function(keys, func, desc) vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'Rust: ' .. desc }) end
 
-          vim.keymap.set('n', 'K', function() vim.cmd.RustLsp('hover', 'actions') end, { desc = 'Rust Hover Actions', buffer = bufnr })
+          map('<leader>rr', '<cmd>RustLsp runnables<cr>', 'Runnables')
+          map('<leader>rt', '<cmd>RustLsp testables<cr>', 'Testables')
+          map('<leader>em', '<cmd>RustLsp expandMacro<cr>', 'Expand Macro')
+          map('<leader>rd', '<cmd>RustLsp externalDocs<cr>', 'External Docs')
+          map('<leader>ca', '<cmd>RustLsp codeAction<cr>', 'Code Action')
+          map('K', '<cmd>RustLsp hover actions<cr>', 'Hover Actions')
 
-          if client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true, { bufnr = bufnr }) end
+          if client and client:supports_method 'textDocument/inlayHint' then vim.lsp.inlay_hint.enable(true, { bufnr = bufnr }) end
         end,
         default_settings = {
           ['rust-analyzer'] = {
-            check = {
-              command = 'clippy',
-            },
-            procMacro = {
-              enable = true,
-            },
+            check = { command = 'clippy' },
+            procMacro = { enable = true },
           },
         },
       },
