@@ -1,31 +1,32 @@
 return {
   'lervag/vimtex',
-  lazy = false, -- VimTeX relies on its own internal lazy-loading
+  lazy = false,
   init = function()
-    -- Set latexmk as the default compiler
     vim.g.vimtex_compiler_method = 'latexmk'
+    vim.g.vimtex_quickfix_open_on_warning = 1
+    vim.g.vimtex_quickfix_mode = 2
 
-    -- Configure latexmk
+    -- Let VimTeX manage the 'out' directory natively
     vim.g.vimtex_compiler_latexmk = {
-      build_dir = 'out', -- VimTeX automatically passes -outdir=out under the hood
-      continuous = 0, -- 0 disables compile-on-save. It will only compile when you ask.
+      out_dir = 'out',
+      continuous = 0,
       options = {
         '-pdf',
-        '-shell-escape', -- Required for todonotes, minted, or pythontex
+        '-shell-escape',
         '-verbose',
         '-file-line-error',
         '-synctex=1',
         '-interaction=nonstopmode',
-        '-outdir=out',
+        -- Notice there is NO -outdir flag here. 
+        -- VimTeX injects it automatically based on build_dir!
       },
     }
 
-    -- Set the PDF viewer
     vim.g.vimtex_view_method = 'general'
   end,
   config = function()
-    -- Set up a custom keybind for a "Single Shot" compile.
-    -- When you press <leader>lc, it will compile once and stop.
     vim.keymap.set('n', '<leader>lc', '<cmd>VimtexCompileSS<CR>', { desc = '[L]aTeX [C]ompile (Single Shot)' })
+    vim.keymap.set('n', '<leader>lo', '<cmd>VimtexCompileOutput<CR>', { desc = '[L]aTeX [O]utput (Raw Log)' })
+    vim.keymap.set('n', '<leader>le', '<cmd>VimtexErrors<CR>', { desc = '[L]aTeX [E]rrors' })
   end,
 }
