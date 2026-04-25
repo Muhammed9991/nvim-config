@@ -44,6 +44,10 @@ return {
       end,
     })
 
+    -- Create new capabilities with nvim cmp, and then broadcast that to the servers.
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
     local servers = {
       texlab = {},
       basedpyright = {
@@ -82,9 +86,10 @@ return {
 
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
     for name, server in pairs(servers) do
+      -- INJECT CAPABILITIES HERE
+      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
       require('lspconfig')[name].setup(server)
     end
-
     if vim.fn.has 'mac' == 0 then require('lspconfig').clangd.setup {} end
   end,
 }
