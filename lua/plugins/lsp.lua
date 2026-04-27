@@ -65,7 +65,18 @@ return {
           end
         end,
         settings = {
-          basedpyright = { analysis = { autoSearchPaths = true, useLibraryCodeForTypes = true, diagnosticMode = 'openFilesOnly', typeCheckingMode = 'basic' } },
+          basedpyright = {
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = 'openFilesOnly',
+              typeCheckingMode = 'basic',
+              diagnosticSeverityOverrides = {
+                reportPrivateImportUsage = false,
+                reportUnknownMemberType = false,
+              },
+            }
+          },
         },
       },
       ruff = {},
