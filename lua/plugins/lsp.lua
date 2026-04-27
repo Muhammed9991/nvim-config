@@ -4,14 +4,19 @@ return {
     { 'mason-org/mason.nvim', opts = {} },
     'mason-org/mason-lspconfig.nvim',
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    { 'j-hui/fidget.nvim', opts = {} },
+    { 'j-hui/fidget.nvim',    opts = {} },
   },
   config = function()
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('user-lsp-attach', { clear = true }),
       callback = function(event)
-        local map = function(keys, func, desc, mode) vim.keymap.set(mode or 'n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc }) end
+        local map = function(keys, func, desc, mode)
+          vim.keymap.set(mode or 'n', keys, func,
+            { buffer = event.buf, desc = 'LSP: ' .. desc })
+        end
 
+        -- Standard LSP Keymaps
+        map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
         map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
         map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
         map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -39,7 +44,9 @@ return {
         end
 
         if client and client:supports_method('textDocument/inlayHint', event.buf) then
-          map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+          map('<leader>th',
+            function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
+            '[T]oggle Inlay [H]ints')
         end
       end,
     })
@@ -63,9 +70,22 @@ return {
       },
       ruff = {},
       marksman = {},
-      stylua = {},
+      -- stylua has been completely evicted from the servers table!
       lua_ls = {
-        settings = { Lua = { workspace = { checkThirdParty = false } } },
+        settings = {
+          Lua = {
+            -- 1. Tell the LSP that 'vim' magically exists
+            diagnostics = {
+              globals = { 'vim' },
+            },
+            workspace = {
+              checkThirdParty = false,
+              -- 2. Point the LSP to Neovim's internal runtime files for autocomplete
+              library = vim.api.nvim_get_runtime_file('', true),
+            },
+            telemetry = { enable = false },
+          }
+        },
       },
     }
 
@@ -80,16 +100,22 @@ return {
       'latexindent',
       'ruff',
       'stylua',
-      -- html-lsp, clangd, texlab, marksman, and lua-language-server
-      -- should already be handled by your 'servers' table above!
     })
 
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
     for name, server in pairs(servers) do
-      -- INJECT CAPABILITIES HERE
       server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-      require('lspconfig')[name].setup(server)
+
+      -- NATIVE NEOVIM API (No more deprecation warnings)
+      vim.lsp.config(name, server)
+      vim.lsp.enable(name)
     end
-    if vim.fn.has 'mac' == 0 then require('lspconfig').clangd.setup {} end
+
+    -- LINUX FALLBACK WITH NATIVE API
+    if vim.fn.has('mac') == 0 then
+      vim.lsp.config('clangd', { capabilities = capabilities })
+      vim.lsp.enable('clangd')
+    end
   end,
 }
