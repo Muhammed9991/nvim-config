@@ -56,6 +56,7 @@ return {
     capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
     local servers = {
+      ts_ls = {},
       texlab = {},
       basedpyright = {
         on_new_config = function(new_config, _)
@@ -105,6 +106,7 @@ return {
     local ensure_installed = vim.tbl_keys(servers or {})
     -- Add all your non-LSP tools (formatters, linters) here
     vim.list_extend(ensure_installed, {
+      'prettier',
       'markdownlint',
       'clang-format',
       'latexindent',
